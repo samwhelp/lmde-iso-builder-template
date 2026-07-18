@@ -17,6 +17,7 @@
 ## Subject
 
 * [Respin](#respin)
+* [Live Account](#live-account)
 * [Link](#link)
 
 
@@ -29,6 +30,30 @@
 | [lmde-iso-builder-remix-base](https://github.com/samwhelp/lmde-iso-builder-remix-base) | [lmde-iso-builder-respin-base](https://github.com/samwhelp/lmde-iso-builder-respin-base) |
 | [lmde-iso-builder-remix-cinnamon](https://github.com/samwhelp/lmde-iso-builder-remix-cinnamon) | [lmde-iso-builder-respin-cinnamon](https://github.com/samwhelp/lmde-iso-builder-respin-cinnamon) |
 | [lmde-iso-builder-remix-xfce](https://github.com/samwhelp/lmde-iso-builder-remix-xfce) | [lmde-iso-builder-respin-xfce](https://github.com/samwhelp/lmde-iso-builder-respin-xfce) |
+
+
+
+
+## Live Account
+
+| Account  | Value  |
+| -------- | ------ |
+| Username | `live` |
+| Password | `live` |
+
+
+To change the password for the current account, you can run the following command:
+
+``` sh
+sudo passwd $(whoami)
+```
+
+
+To remove the password for the current account, you can run the following command:
+
+``` sh
+sudo passwd -d $(whoami)
+```
 
 
 
