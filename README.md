@@ -25,6 +25,7 @@
 | [lmde-iso-builder-remix-base](https://github.com/samwhelp/lmde-iso-builder-remix-base) | [lmde-iso-builder-respin-base](https://github.com/samwhelp/lmde-iso-builder-respin-base) |
 | [lmde-iso-builder-remix-cinnamon](https://github.com/samwhelp/lmde-iso-builder-remix-cinnamon) | [lmde-iso-builder-respin-cinnamon](https://github.com/samwhelp/lmde-iso-builder-respin-cinnamon) |
 | [lmde-iso-builder-remix-xfce](https://github.com/samwhelp/lmde-iso-builder-remix-xfce) | [lmde-iso-builder-respin-xfce](https://github.com/samwhelp/lmde-iso-builder-respin-xfce) |
+| [lmde-iso-builder-remix-kde-plasma](https://github.com/samwhelp/lmde-iso-builder-remix-kde-plasma) | [lmde-iso-builder-respin-kde-plasma](https://github.com/samwhelp/lmde-iso-builder-respin-kde-plasma) |
 
 
 
