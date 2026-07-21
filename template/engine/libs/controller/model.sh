@@ -591,6 +591,7 @@ __EOF__
 function sys_add_lmde_apt_preferences () {
 
 	print_info "Config Lmde apt preferences ..."
+	mkdir -p "${DISTRO_IMG_DIR_PATH}/etc/apt/preferences.d"
 cat << __EOF__ | tee "${DISTRO_IMG_DIR_PATH}/etc/apt/preferences.d/lmde.pref"  > /dev/null 2>&1
 Package: *
 Pin: origin live.linuxmint.com
