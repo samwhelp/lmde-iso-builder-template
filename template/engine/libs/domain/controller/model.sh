@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 
-#=============================
+################################################################################
 # Module
-#=============================
+################################################################################
 
 function core_check_permission () {
 
@@ -14,13 +14,12 @@ function core_check_permission () {
 
 }
 
-function core_var_dump () {
-
-	print_info "Dump skeleton variables"
+function raw_var_dump () {
 
 	echo "GEAR_DIR_PATH=${GEAR_DIR_PATH}"
 	echo "LIBS_DIR_PATH=${LIBS_DIR_PATH}"
 	echo "MODS_DIR_PATH=${MODS_DIR_PATH}"
+	echo "ARGS_DIR_PATH=${ARGS_DIR_PATH}"
 
 	echo "PLAN_DIR_PATH=${PLAN_DIR_PATH}"
 	echo "TEMPLATE_DIR_PATH=${TEMPLATE_DIR_PATH}"
@@ -40,7 +39,27 @@ function core_var_dump () {
 	echo "INSTALLER_PACKAGE_DIR_PATH=${INSTALLER_PACKAGE_DIR_PATH}"
 	echo "INSTALLER_PACKAGE_INSTALL_DIR_PATH=${INSTALLER_PACKAGE_INSTALL_DIR_PATH}"
 
+}
+
+function core_var_dump () {
+
+	print_info "Dump skeleton variables"
+
+	raw_var_dump
+
 	judge "Dump skeleton variables"
+
+}
+
+function raw_building_var_dump () {
+
+	echo "APT_SOURCE=${APT_SOURCE}"
+	echo "TARGET_DEBIAN_VERSION=${TARGET_DEBIAN_VERSION}"
+	echo "TARGET_ARCH=${TARGET_ARCH}"
+	echo "TARGET_NAME=${TARGET_NAME}"
+	echo "TARGET_BUSINESS_NAME=${TARGET_BUSINESS_NAME}"
+	echo "TARGET_BUILD_VERSION=${TARGET_BUILD_VERSION}"
+	echo "PKG_SERVER=${PKG_SERVER}"
 
 }
 
@@ -48,11 +67,7 @@ function core_building_var_dump () {
 
 	print_info "Dump building variables"
 
-	echo "TARGET_DEBIAN_VERSION=${TARGET_DEBIAN_VERSION}"
-	echo "APT_SOURCE=${APT_SOURCE}"
-	echo "TARGET_NAME=${TARGET_NAME}"
-	echo "TARGET_BUSINESS_NAME=${TARGET_BUSINESS_NAME}"
-	echo "TARGET_BUILD_VERSION=${TARGET_BUILD_VERSION}"
+	raw_building_var_dump
 
 	judge "Dump building variables"
 
@@ -448,6 +463,7 @@ function sys_copy_fulfill_scripts_to_chroot () {
 
 	print_info "Copying fulfill scripts to chroot /opt/build ..."
 	mkdir -p "${DISTRO_IMG_DIR_PATH}/opt/build/template/engine"
+	[ -d "${ARGS_DIR_PATH}" ] && cp -rfT "${ARGS_DIR_PATH}" "${DISTRO_IMG_DIR_PATH}/opt/build/template/engine/args" || true
 	cp -rfT "${LIBS_DIR_PATH}" "${DISTRO_IMG_DIR_PATH}/opt/build/template/engine/libs"
 	cp -rfT "${MODS_DIR_PATH}" "${DISTRO_IMG_DIR_PATH}/opt/build/template/engine/mods"
 	cp -rfT "${MASTER_ASSET_DIR_PATH}" "${DISTRO_IMG_DIR_PATH}/opt/build/template/asset"
@@ -757,11 +773,12 @@ function sys_archive_system_to_iso () {
 	cp "${REAL_INITRD}" "${DISTRO_ISO_DIR_PATH}/live/initrd.img"
 	judge "Copy kernel files"
 
-	print_info "Generating grub.cfg ..."
+	print_info "Save build args ..."
 	touch "${DISTRO_ISO_DIR_PATH}/${TARGET_NAME}"
-	cp ${LIBS_DIR_PATH}/args.sh "${DISTRO_ISO_DIR_PATH}/${TARGET_NAME}"
-	judge "Copy build args to disk"
+	raw_building_var_dump | tee "${DISTRO_ISO_DIR_PATH}/${TARGET_NAME}"
+	judge "Save build args"
 
+	print_info "Generating grub.cfg ..."
 	# Configurations are setup in new_building_os/usr/share/initramfs-tools/scripts/casper-bottom/25configure_init
 	local TRY_TEXT="Try or Install ${TARGET_BUSINESS_NAME}"
 	local TOGO_TEXT="${TARGET_BUSINESS_NAME} To Go (Persistent on USB)"
@@ -1004,13 +1021,24 @@ EOF
 	/bin/bash -c "(find . -type f -print0 | xargs -0 md5sum | grep -v -e 'md5sum.txt' -e 'bios.img' -e 'efiboot.img' > md5sum.txt)"
 	judge "Create md5sum.txt"
 
-	print_info "Creating iso image on ${WORK_DIR_PATH}/${TARGET_NAME}.iso ..."
+	local build_iso_file_main_name="${TARGET_NAME}"
+	local build_iso_file_name="${build_iso_file_main_name}.iso"
+	local build_iso_file_path="${WORK_DIR_PATH}/${build_iso_file_name}"
+
+	local dist_iso_file_main_name="${TARGET_NAME}-${TARGET_BUILD_VERSION}-${TARGET_ARCH}-${DATE}"
+	local dist_iso_file_name="${dist_iso_file_main_name}.iso"
+	local dist_iso_file_path="${DIST_DIR_PATH}/${dist_iso_file_name}"
+
+	local sha256_file_name="${dist_iso_file_main_name}.sha256"
+	local sha256_file_path="${DIST_DIR_PATH}/${sha256_file_name}"
+
+	print_info "Creating iso image on ${build_iso_file_path} ..."
 	xorriso \
 		-as mkisofs \
 		-r -J \
 		-iso-level 3 \
 		-full-iso9660-filenames \
-		-volid "${TARGET_NAME}" \
+		-volid "${TARGET_ISO_VOLID}" \
 		-eltorito-boot boot/grub/bios.img \
 			-no-emul-boot \
 			-boot-load-size 4 \
@@ -1022,7 +1050,7 @@ EOF
 			-e EFI/efiboot.img \
 			-no-emul-boot \
 			-append_partition 2 0xef isolinux/efiboot.img \
-		-output "${WORK_DIR_PATH}/${TARGET_NAME}.iso" \
+		-output "${build_iso_file_path}" \
 		-m "isolinux/efiboot.img" \
 		-m "isolinux/bios.img" \
 		-graft-points \
@@ -1033,14 +1061,14 @@ EOF
 
 	judge "Create iso image"
 
-	print_info "Moving iso image to ${DIST_DIR_PATH}/${TARGET_BUSINESS_NAME}-${TARGET_BUILD_VERSION}-${DATE}.iso ..."
+	print_info "Moving iso image to ${dist_iso_file_path} ..."
 	mkdir -p "${DIST_DIR_PATH}"
-	mv "${WORK_DIR_PATH}/${TARGET_NAME}.iso" "${DIST_DIR_PATH}/${TARGET_BUSINESS_NAME}-${TARGET_BUILD_VERSION}-${DATE}.iso"
+	mv "${build_iso_file_path}" "${dist_iso_file_path}"
 	judge "Move iso image"
 
 	print_info "Generating sha256 checksum ..."
-	local HASH=$(sha256sum "${DIST_DIR_PATH}/${TARGET_BUSINESS_NAME}-${TARGET_BUILD_VERSION}-${DATE}.iso" | cut -d ' ' -f 1)
-	echo "SHA256: ${HASH}" > "${DIST_DIR_PATH}/${TARGET_BUSINESS_NAME}-${TARGET_BUILD_VERSION}-${DATE}.sha256"
+	local HASH=$(sha256sum "${dist_iso_file_path}" | cut -d ' ' -f 1)
+	echo "SHA256: ${HASH}" | tee "${sha256_file_path}" > /dev/null 2>&1
 	judge "Generate sha256 checksum"
 
 	popd
@@ -1058,9 +1086,9 @@ function mod_archive_system_to_iso () {
 
 
 
-#=============================
+################################################################################
 # Model
-#=============================
+################################################################################
 
 function model_clean () {
 
