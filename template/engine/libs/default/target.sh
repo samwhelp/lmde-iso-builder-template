@@ -42,7 +42,7 @@ TARGET_BUSINESS_NAME="Lmde"
 TARGET_BUILD_VERSION="7.0.0"
 
 # For xorriso -volid
-TARGET_ISO_VOLID="Lmde"
+TARGET_ISO_VOLID="LMDE"
 
 ################################################################################
 # Installer customization
