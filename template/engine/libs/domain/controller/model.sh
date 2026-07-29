@@ -114,12 +114,21 @@ function mod_prepare () {
 function mod_bind_signal () {
 
 	print_info "Bind signal ..."
-	trap mod_umount_on_exit EXIT
+	trap mod_unmount_on_exit EXIT INT TERM
 	judge "Bind signal"
 
 }
 
-function sys_unmount_before_clean () {
+function mod_unmount_on_exit () {
+
+	sleep 2
+	print_info "Umount before exit ..."
+	set +e
+	sys_unmount_before_clean
+
+}
+
+function raw_unmount_before_clean () {
 
 	umount "${DISTRO_IMG_DIR_PATH}/sys" || umount -lf "${DISTRO_IMG_DIR_PATH}/sys" || true
 	umount "${DISTRO_IMG_DIR_PATH}/proc" || umount -lf "${DISTRO_IMG_DIR_PATH}/proc" || true
@@ -130,11 +139,31 @@ function sys_unmount_before_clean () {
 
 }
 
-function mod_umount_on_exit () {
+function sys_unmount_before_clean () {
 
-	sleep 2
-	print_info "Umount before exit ..."
-	sys_unmount_before_clean
+	local node=""
+	local path=""
+
+	for node in "proc sys dev/pts dev run"; do
+		path="${DISTRO_ISO_DIR_PATH}/${node}"
+		try_unmount "${path}"
+	done
+
+	for node in "isolinux/efi"; do
+		path="${DISTRO_IMG_DIR_PATH}/${node}"
+		try_unmount "${path}"
+	done
+
+
+}
+
+function try_unmount () {
+
+	local path="${1}"
+
+	if mountpoint -q "${path}"; then
+		umount -lf "${path}" || umount "${path}" || true
+	fi
 
 }
 
@@ -155,7 +184,7 @@ function sys_reload_systemd_daemon () {
 
 }
 
-function sys_mount () {
+function raw_mount () {
 
 	##
 	## https://github.com/mvallim/live-custom-ubuntu-from-scratch/blob/master/scripts/build.sh#L46-L52
@@ -182,18 +211,19 @@ function sys_mount () {
 
 }
 
-function sys_unmount () {
+function raw_unmount () {
 
 	##
 	## https://github.com/mvallim/live-custom-ubuntu-from-scratch/blob/master/scripts/build.sh#L54-L60
 	##
 
+	##
 	## sudo chroot chroot umount -l /proc
 	## sudo chroot chroot umount -l /sys
 	## sudo chroot chroot umount -l /dev/pts
 	## sudo umount -l chroot/dev
 	## sudo umount -l chroot/run
-
+	##
 
 	print_info "Unmounting ..."
 
@@ -207,14 +237,37 @@ function sys_unmount () {
 	umount -l "${DISTRO_IMG_DIR_PATH}/run" || true
 	judge "Unmount /dev /run"
 
+}
 
+function wise_unmount () {
+
+	print_info "Unmounting ..."
+
+	local node=""
+	local path=""
+
+	for node in "proc sys dev/pts dev run"; do
+		path="${DISTRO_ISO_DIR_PATH}/${node}"
+		try_unmount "${path}"
+	done
+
+}
+
+function sys_mount () {
+
+	raw_mount
+
+}
+
+function sys_unmount () {
+
+	wise_unmount
 
 }
 
 function mod_mount () {
 
 	sys_unmount_before_clean
-
 	sys_reload_systemd_daemon
 	sys_mount
 
@@ -224,7 +277,6 @@ function mod_unmount () {
 
 	sys_unmount_before_clean
 	sys_unmount
-
 }
 
 function mod_chroot () {
