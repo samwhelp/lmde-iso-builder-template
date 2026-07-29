@@ -1069,7 +1069,7 @@ EOF
 
 	print_info "Generating sha256 checksum ..."
 	local HASH=$(sha256sum "${dist_iso_file_path}" | cut -d ' ' -f 1)
-	echo "SHA256: ${HASH}" | tee "${sha256_file_path}" > /dev/null 2>&1
+	echo "${HASH}  ${dist_iso_file_name}" | tee "${sha256_file_path}" > /dev/null 2>&1
 	judge "Generate sha256 checksum"
 
 	popd
