@@ -168,7 +168,8 @@ function try_unmount () {
 	local path="${1}"
 
 	if mountpoint -q "${path}"; then
-		umount -lf "${path}" || umount "${path}" || true
+		umount "${path}" || umount -lf "${path}" || true
+		sync
 	fi
 
 }
