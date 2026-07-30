@@ -178,8 +178,8 @@ function try_unmount_before_clean () {
 function sys_unmount_before_clean () {
 
 	##raw_unmount_before_clean
-	##try_unmount_before_clean
-	let_unmount_before_clean
+	try_unmount_before_clean
+	##let_unmount_before_clean
 
 }
 
@@ -312,9 +312,9 @@ function sys_mount () {
 
 function sys_unmount () {
 
-	##raw_unmount
+	raw_unmount
 	##try_unmount
-	let_unmount
+	##let_unmount
 
 }
 
