@@ -139,19 +139,19 @@ function raw_unmount_before_clean () {
 
 }
 
-function check_unmount_before_clean () {
+function let_unmount_before_clean () {
 
 	local node=""
 	local path=""
 
 	for node in "proc sys dev/pts dev run"; do
 		path="${DISTRO_IMG_DIR_PATH}/${node}"
-		check_unmount_node "${path}"
+		let_unmount_node "${path}"
 	done
 
 	for node in "isolinux/efi"; do
 		path="${DISTRO_ISO_DIR_PATH}/${node}"
-		check_unmount_node "${path}"
+		let_unmount_node "${path}"
 	done
 
 
@@ -179,11 +179,11 @@ function sys_unmount_before_clean () {
 
 	##raw_unmount_before_clean
 	##try_unmount_before_clean
-	check_unmount_before_clean
+	let_unmount_before_clean
 
 }
 
-function check_unmount_node () {
+function let_unmount_node () {
 
 	local path="${1}"
 
@@ -275,7 +275,7 @@ function raw_unmount () {
 
 }
 
-function check_unmount () {
+function let_unmount () {
 
 	print_info "Unmounting ..."
 
@@ -284,7 +284,7 @@ function check_unmount () {
 
 	for node in "proc sys dev/pts dev run"; do
 		path="${DISTRO_IMG_DIR_PATH}/${node}"
-		check_unmount_node "${path}"
+		let_unmount_node "${path}"
 	done
 
 }
@@ -314,7 +314,7 @@ function sys_unmount () {
 
 	##raw_unmount
 	##try_unmount
-	check_unmount
+	let_unmount
 
 }
 
