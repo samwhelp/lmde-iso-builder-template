@@ -93,5 +93,5 @@ prepare:
 
 
 build:
-	@./to-build.sh
+	@./build.sh
 .PHONY: build
