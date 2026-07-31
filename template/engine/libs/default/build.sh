@@ -11,11 +11,11 @@
 ################################################################################
 # Builder Environment Variables
 ################################################################################
+
 DEBIAN_FRONTEND=noninteractive
 
-# Set if build in an interactive way.
-# Can be: "-y" or ""
-INTERACTIVE="-y"
+
+
 
 ################################################################################
 # Language Information

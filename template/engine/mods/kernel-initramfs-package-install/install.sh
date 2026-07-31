@@ -33,7 +33,7 @@ source "${LIBS_DIR_PATH}/domain/worker/init.sh"
 
 function model_kernel_initramfs_package_install () {
 
-	apt install ${INTERACTIVE} \
+	apt install -y \
 		initramfs-tools \
 		zstd \
 	--no-install-recommends

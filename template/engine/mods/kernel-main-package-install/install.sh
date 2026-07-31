@@ -33,7 +33,7 @@ source "${LIBS_DIR_PATH}/domain/worker/init.sh"
 
 function model_kernel_main_package_install () {
 
-	apt install ${INTERACTIVE} \
+	apt install -y \
 		linux-image-amd64 \
 		linux-headers-amd64 \
 		thermald \

@@ -37,7 +37,7 @@ function model_lmde_swap_packages () {
 	## ## Install Lmde swap packages
 	##
 
-	apt install ${INTERACTIVE} \
+	apt install -y \
 		linuxmint-keyring \
 		base-files \
 	--install-recommends

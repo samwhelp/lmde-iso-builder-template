@@ -49,7 +49,7 @@ function model_basic_language_pack_install () {
 	print_info "Installing available language packs ..."
 	print_info "(this might take a while)"
 	if [ -n "${VALID_PACKAGES}" ]; then
-		apt install ${INTERACTIVE} ${VALID_PACKAGES} --no-install-recommends
+		apt install -y ${VALID_PACKAGES} --no-install-recommends
 		judge "Install language packs"
 	else
 		print_warn "No language packs were valid for installation."

@@ -33,7 +33,7 @@ source "${LIBS_DIR_PATH}/domain/worker/init.sh"
 
 function model_base_network_package_install () {
 
-	apt install ${INTERACTIVE} \
+	apt install -y \
 		network-manager \
 		net-tools \
 		resolvconf \

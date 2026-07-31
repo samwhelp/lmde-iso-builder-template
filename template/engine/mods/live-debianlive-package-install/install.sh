@@ -33,7 +33,7 @@ source "${LIBS_DIR_PATH}/domain/worker/init.sh"
 
 function model_live_debianlive_package_install () {
 
-	apt install ${INTERACTIVE} \
+	apt install -y \
 		live-boot \
 		live-config \
 		live-config-systemd \

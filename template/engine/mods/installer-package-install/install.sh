@@ -124,11 +124,11 @@ function find_package_install_list () {
 function model_installer_package_install () {
 
 	local package_install_list=$(find_package_install_list)
-	local run_cmd="apt install ${INTERACTIVE} --install-recommends ${package_install_list}"
+	local run_cmd="apt install -y --install-recommends ${package_install_list}"
 
 	echo ${run_cmd}
 	${run_cmd}
-	#apt install ${INTERACTIVE} --install-recommends ${package_install_list}
+	#apt install -y --install-recommends ${package_install_list}
 	judge "Install Package"
 
 }
