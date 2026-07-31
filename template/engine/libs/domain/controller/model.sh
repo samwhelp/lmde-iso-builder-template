@@ -123,7 +123,7 @@ function mod_unmount_on_exit () {
 
 	sleep 2
 	print_info "Umount before exit ..."
-	set +e
+	##set +e
 	sys_unmount_before_clean
 
 }
