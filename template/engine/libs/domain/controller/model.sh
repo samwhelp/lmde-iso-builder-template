@@ -701,7 +701,7 @@ function sys_add_lmde_apt_sources () {
 cat << __EOF__ | tee "${DISTRO_IMG_DIR_PATH}/etc/apt/sources.list.d/lmde.sources" > /dev/null 2>&1
 Types: deb
 X-Repolib-Name: Linux Mint
-URIs: http://packages.linuxmint.com
+URIs: ${PKG_SERVER}
 Suites: gigi
 Components: main upstream import backport
 Signed-By: /etc/apt/trusted.gpg.d/linuxmint-keyring.gpg
