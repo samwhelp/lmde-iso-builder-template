@@ -880,7 +880,6 @@ function sys_archive_system_to_iso () {
 	judge "Copy kernel files"
 
 	print_info "Save build args ..."
-	touch "${DISTRO_ISO_DIR_PATH}/${TARGET_NAME}"
 	raw_building_var_dump | tee "${DISTRO_ISO_DIR_PATH}/${TARGET_NAME}"
 	judge "Save build args"
 
@@ -949,6 +948,18 @@ function sys_archive_system_to_iso () {
 	cp /usr/share/grub/unicode.pf2 "${DISTRO_ISO_DIR_PATH}/isolinux/unicode.pf2"
 	cp /usr/share/grub/unicode.pf2 "${DISTRO_ISO_DIR_PATH}/boot/grub/fonts/unicode.pf2"
 	judge "Prepare GRUB unicode font"
+
+
+	##
+	## ## for grub.cfg: search --set=root --file /${TARGET_NAME}
+	##
+
+	touch "${DISTRO_ISO_DIR_PATH}/${TARGET_NAME}"
+
+
+	##
+	## ## create grub.cfg
+	##
 
 	cat << EOF > "${DISTRO_ISO_DIR_PATH}/isolinux/grub.cfg"
 
