@@ -144,12 +144,12 @@ function let_unmount_before_clean () {
 	local node=""
 	local path=""
 
-	for node in "proc sys dev/pts dev run"; do
+	for node in proc sys dev/pts dev run; do
 		path="${DISTRO_IMG_DIR_PATH}/${node}"
 		let_unmount_node "${path}"
 	done
 
-	for node in "isolinux/efi"; do
+	for node in isolinux/efi; do
 		path="${DISTRO_ISO_DIR_PATH}/${node}"
 		let_unmount_node "${path}"
 	done
@@ -282,7 +282,7 @@ function let_unmount () {
 	local node=""
 	local path=""
 
-	for node in "proc sys dev/pts dev run"; do
+	for node in proc sys dev/pts dev run; do
 		path="${DISTRO_IMG_DIR_PATH}/${node}"
 		let_unmount_node "${path}"
 	done
