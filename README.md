@@ -67,13 +67,6 @@ sudo passwd -d $(whoami)
 
 | Link | GitHub |
 | ---- | ------ |
-| [lmde-live-custom-template](https://samwhelp.github.io/lmde-live-custom-template/) | [GitHub](https://github.com/samwhelp/lmde-live-custom-template) |
-| [lmde-live-create-template](https://samwhelp.github.io/lmde-live-create-template/) | [GitHub](https://github.com/samwhelp/lmde-live-create-template) |
-| [lmde-iso-builder-template](https://samwhelp.github.io/lmde-iso-builder-template/) | [GitHub](https://github.com/samwhelp/lmde-iso-builder-template) |
-
-
-| Link | GitHub |
-| ---- | ------ |
 | [Lmde Adjustment](https://samwhelp.github.io/lmde-adjustment/) | [GitHub](https://github.com/samwhelp/lmde-adjustment) |
 
 
